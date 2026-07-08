@@ -1,0 +1,80 @@
+.profile-card {
+  background: rgb(var(--surface));
+  overflow: hidden;
+  height: fit-content;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+  border: 1px solid rgb(var(--border));
+}
+
+.profile-banner {
+  background: rgb(var(--primary));
+  height: 92px;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 24px;
+}
+
+.avatar-badge {
+  width: 68px;
+  height: 68px;
+  transform: translateY(34px);
+  background: rgb(var(--surface));
+  border: 3px solid rgb(var(--surface));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: rgb(var(--primary));
+}
+
+.profile-body {
+  padding: 48px 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profile-name {
+  font-size: 1.25rem;
+}
+
+.profile-role-tag {
+  align-self: flex-start;
+  background: rgb(var(--primary) / 0.08);
+  color: rgb(var(--primary));
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: var(--radius);
+}
+
+.profile-fields {
+  margin: 12px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 12px;
+  border-top: 1px solid rgb(var(--border));
+}
+
+.profile-field dt {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgb(var(--text-muted));
+}
+
+.profile-field dd {
+  margin: 0;
+  font-size: 0.92rem;
+  color: rgb(var(--text));
+  font-weight: 500;
+}

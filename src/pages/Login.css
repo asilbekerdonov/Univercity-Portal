@@ -1,0 +1,131 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(var(--surface-muted));
+  background-image: radial-gradient(
+    circle at 50% 0%,
+    rgb(var(--primary) / 0.06),
+    transparent 55%
+  );
+  padding: 24px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--border));
+  box-shadow: 0 20px 50px rgb(0 0 0 / 0.08);
+  padding: 40px 36px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.login-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.login-mark {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius);
+  background: rgb(var(--primary));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.login-title {
+  font-size: 1.5rem;
+}
+
+.login-subtitle {
+  font-size: 0.88rem;
+  color: rgb(var(--text-muted));
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgb(var(--text));
+}
+
+.input {
+  border: 1px solid rgb(var(--border));
+  padding: 11px 14px;
+  font-size: 0.92rem;
+  color: rgb(var(--text));
+  background: rgb(var(--surface));
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus {
+  border-color: rgb(var(--primary));
+  box-shadow: 0 0 0 3px rgb(var(--primary) / 0.12);
+  outline: none;
+}
+
+.field-error {
+  font-size: 0.78rem;
+  color: rgb(var(--danger));
+}
+
+.form-error {
+  font-size: 0.85rem;
+  color: rgb(var(--danger));
+  background: rgb(var(--danger) / 0.08);
+  padding: 10px 12px;
+  border-radius: var(--radius);
+}
+
+.button {
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.92rem;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.login-submit {
+  background: rgb(var(--primary));
+  color: #fff;
+  padding: 12px;
+  margin-top: 4px;
+}
+
+.login-submit:hover:not(:disabled) {
+  background: rgb(var(--primary-hover));
+}
+
+.login-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.login-footnote {
+  font-size: 0.78rem;
+  color: rgb(var(--text-muted));
+  text-align: center;
+}

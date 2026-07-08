@@ -1,0 +1,91 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap");
+
+:root {
+  /* Primary brand color, RGB triplet for rgb(var(--primary) / alpha) usage */
+  --primary: 0 33 71;
+  --primary-hover: 12 48 92;
+
+  --surface: 255 255 255;
+  --surface-muted: 244 245 247;
+  --text: 24 27 32;
+  --text-muted: 96 101 112;
+  --border: 224 226 231;
+  --danger: 178 34 34;
+
+  --radius: 10px;
+  --font-display: "Source Serif 4", Georgia, serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  color: rgb(var(--text));
+  background: rgb(var(--surface-muted));
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+/* Global rule: every contained surface uses the single 10px radius token.
+   No sharp corners, no pill shapes anywhere in the interface. */
+.card,
+.button,
+input,
+.input,
+.modal,
+.nav-pill,
+.avatar-badge {
+  border-radius: var(--radius);
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--primary));
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

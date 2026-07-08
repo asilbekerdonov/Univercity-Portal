@@ -1,0 +1,38 @@
+.faculty-card {
+  background: rgb(var(--primary));
+  color: #fff;
+  padding: 20px;
+  min-height: 128px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 6px;
+  cursor: default;
+  transition: background-color 0.25s ease, transform 0.25s ease,
+    box-shadow 0.25s ease;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
+}
+
+.faculty-card:hover {
+  background: rgb(var(--primary-hover));
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgb(var(--primary) / 0.28);
+}
+
+.faculty-card-index {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: rgb(255 255 255 / 0.55);
+}
+
+.faculty-card-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.faculty-card-hint {
+  font-size: 0.75rem;
+  color: rgb(255 255 255 / 0.6);
+}
