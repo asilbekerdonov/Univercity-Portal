@@ -1,6 +1,6 @@
 import type { AuthUser } from "../types";
 import { ROLE_LABELS } from "../types";
-import "./ProfileCard.css";
+import "../styles/components/ProfileCard.css";
 
 interface ProfileCardProps {
   user: AuthUser;

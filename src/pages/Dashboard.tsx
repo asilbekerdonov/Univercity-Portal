@@ -1,10 +1,11 @@
-import { useMemo } from "react";
+import { useState } from "react";
 import { Navbar } from "../components/Navbar";
 import { FacultyCard } from "../components/FacultyCard";
 import { ProfileCard } from "../components/ProfileCard";
+import { FacultyForm } from "../components/FacultyForm";
 import { useAuth } from "../context/AuthContext";
 import type { Faculty } from "../types";
-import "./Dashboard.css";
+import "../styles/Dashboard.css";
 
 function buildPlaceholderFaculties(): Faculty[] {
   return Array.from({ length: 12 }, (_, i) => ({
@@ -15,7 +16,18 @@ function buildPlaceholderFaculties(): Faculty[] {
 
 export function Dashboard() {
   const { user } = useAuth();
-  const faculties = useMemo(buildPlaceholderFaculties, []);
+  const [faculties, setFaculties] = useState<Faculty[]>(buildPlaceholderFaculties);
+
+  function handleAddFaculty(name: string, description: string) {
+    setFaculties((prev) => [
+      ...prev,
+      {
+        id: prev.length > 0 ? Math.max(...prev.map((f) => f.id)) + 1 : 1,
+        name,
+        description,
+      },
+    ]);
+  }
 
   return (
     <div className="dashboard-page">
@@ -48,6 +60,7 @@ export function Dashboard() {
 
         <section className="profile-column" aria-label="Staff profile">
           {user && <ProfileCard user={user} />}
+          <FacultyForm onAdd={handleAddFaculty} />
         </section>
       </main>
     </div>

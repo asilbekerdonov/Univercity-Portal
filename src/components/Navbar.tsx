@@ -1,5 +1,5 @@
 import { useAuth } from "../context/AuthContext";
-import "./Navbar.css";
+import "../styles/components/Navbar.css";
 
 const NAV_LINKS = ["Dashboard", "Faculties", "Reports", "Team"];
 

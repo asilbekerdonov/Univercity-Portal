@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { ApiError } from "../api/client";
-import "./Login.css";
+import "../styles/Login.css";
 
 export function Login() {
   const { login, isLoading } = useAuth();
