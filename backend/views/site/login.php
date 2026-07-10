@@ -64,15 +64,15 @@ $labelOptions = ['class' => 'form-label fw-semibold small'];
                 <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
                 <div class="mb-3">
-                    <?= $form->field($model, 'username', [
+                    <?= $form->field($model, 'email', [
                         'options' => ['class' => 'mb-0'],
                         'template' => sprintf($htmlIcon, '&#128100;'),
                         'inputOptions' => [
                             'class' => 'form-control',
-                            'placeholder' => 'username',
+                            'placeholder' => 'email',
                             'autofocus' => true,
                         ],
-                    ])->textInput()->label('Your Username', $labelOptions) ?>
+                    ])->textInput()->label('Your Email', $labelOptions) ?>
                 </div>
 
                 <div class="mb-3">
@@ -84,10 +84,6 @@ $labelOptions = ['class' => 'form-label fw-semibold small'];
                             'placeholder' => 'Password',
                         ],
                     ])->passwordInput()->label('Your Password', $labelOptions) ?>
-                </div>
-
-                <div class="mb-4">
-                    <?= $form->field($model, 'rememberMe')->checkbox() ?>
                 </div>
 
                 <div class="d-grid">
