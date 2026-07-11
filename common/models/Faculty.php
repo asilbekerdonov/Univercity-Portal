@@ -39,4 +39,9 @@ class Faculty extends ActiveRecord
     {
         return ['id', 'name', 'slug', 'description', 'sort_order', 'is_active'];
     }
+    
+    public function getStudents()
+    {
+        return $this->hasMany(Student::class, ['faculty_id' => 'id']);
+    }
 }

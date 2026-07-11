@@ -129,7 +129,7 @@ curl -H "Authorization: Bearer <token>" http://localhost:8080/v1/faculties
 ## Тесты
 
 ```bash
-./vendor/bin/phpunit tests/Feature/LoginTest.php
+vendor/bin/phpunit common/tests/Unit/Models
 ```
 
 ## Частые проблемы

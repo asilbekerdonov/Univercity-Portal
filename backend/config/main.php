@@ -29,12 +29,16 @@ return [
                 // API маршруты
                 'POST v1/auth/login' => 'v1/auth/login',
                 'v1/auth/login' => 'v1/auth/login',
-                
+
                 'GET v1/faculties' => 'v1/faculty/index',
                 'GET v1/faculties/<id>' => 'v1/faculty/view',
+                'GET v1/faculties/<id>/students' => 'v1/faculty/students',
+                'POST v1/faculties/<id>/students' => 'v1/student/create',
                 'POST v1/faculties' => 'v1/faculty/create',
                 'PUT v1/faculties/<id>' => 'v1/faculty/update',
+                
                 'DELETE v1/faculties/<id>' => 'v1/faculty/delete',
+                'DELETE v1/students/<id>' => 'v1/student/delete',
             ],
         ],
         'request' => [

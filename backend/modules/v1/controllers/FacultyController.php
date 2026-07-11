@@ -3,6 +3,7 @@
 namespace backend\modules\v1\controllers;
 
 use common\models\Faculty;
+use common\models\Student;
 use common\models\User;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
@@ -30,11 +31,13 @@ class FacultyController extends ActiveController
         return $actions;
     }
 
-    protected function checkSuperAdmin(): void
+    protected function checkCanDelete(): void
     {
         $identity = Yii::$app->user->identity;
-        if (!$identity || $identity->role !== User::ROLE_SUPER_ADMIN) {
-            throw new ForbiddenHttpException('Только super_admin может изменять факультеты.');
+        $allowedRoles = [User::ROLE_SUPER_ADMIN, User::ROLE_SUPERVISOR];
+
+        if (!$identity || !in_array($identity->role, $allowedRoles, true)) {
+            throw new ForbiddenHttpException('Недостаточно прав для удаления факультета.');
         }
     }
 
@@ -86,5 +89,18 @@ class FacultyController extends ActiveController
 
         $model->delete();
         Yii::$app->response->statusCode = 204;
+    }
+    public function actionStudents($id)
+    {
+        $faculty = Faculty::findOne($id);
+
+        if (!$faculty) {
+            Yii::$app->response->statusCode = 404;
+            return ['message' => 'Факультет не найден.'];
+        }
+
+        return Student::find()
+            ->where(['faculty_id' => $faculty->id])
+            ->all();
     }
 }
