@@ -2,6 +2,7 @@ import type {
   LoginRequest,
   LoginSuccessResponse,
   LoginValidationErrorResponse,
+  Faculty,
 } from "../types";
 
 // Base URL for the Yii2 backend. Adjust via Vite env var at build time.
@@ -84,6 +85,19 @@ export const authApi = {
       method: "POST",
       body: JSON.stringify(payload),
       auth: false,
+    });
+  },
+};
+export const facultyApi = {
+  getAll(): Promise<Faculty[]> {
+    return request<Faculty[]>("/v1/faculties", {
+      method: "GET",
+    });
+  },
+  create(payload: { name: string; slug: string; description?: string }): Promise<Faculty> {
+    return request<Faculty>("/v1/faculties", {
+      method: "POST",
+      body: JSON.stringify(payload),
     });
   },
 };

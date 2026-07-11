@@ -30,5 +30,8 @@ export const ROLE_LABELS: Record<UserRole, string> = {
 export interface Faculty {
   id: number;
   name: string;
-  description?: string;
+  slug: string;
+  description: string | null;
+  sort_order: number;
+  is_active: boolean;
 }
