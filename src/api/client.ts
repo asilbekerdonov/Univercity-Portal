@@ -100,4 +100,9 @@ export const facultyApi = {
       body: JSON.stringify(payload),
     });
   },
+  delete(id: number): Promise<void> {
+    return request<void>(`/v1/faculties/${id}`, {
+      method: "DELETE",
+    });
+  },
 };

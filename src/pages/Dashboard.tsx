@@ -97,7 +97,13 @@ export function Dashboard() {
           {!isLoading && !error && (
             <div className="faculties-grid">
               {faculties.map((faculty) => (
-                <FacultyCard key={faculty.id} faculty={faculty} />
+                <FacultyCard
+                  key={faculty.id}
+                  faculty={faculty}
+                  onDeleted={(id) =>
+                    setFaculties((prev) => prev.filter((f) => f.id !== id))
+                  }
+                />
               ))}
             </div>
           )}
