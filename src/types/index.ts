@@ -35,3 +35,11 @@ export interface Faculty {
   sort_order: number;
   is_active: boolean;
 }
+
+export interface Student {
+  id: number;
+  name: string;
+  age: number;
+  course: number;
+  faculty_id: number;
+}

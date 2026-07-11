@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Login } from "./pages/Login";
 import { Dashboard } from "./pages/Dashboard";
+import { FacultyDetail } from "./pages/FacultyDetail";
 
 function RootRedirect() {
   const { isAuthenticated } = useAuth();
@@ -19,6 +20,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/faculties/:id"
+        element={
+          <ProtectedRoute>
+            <FacultyDetail />
           </ProtectedRoute>
         }
       />

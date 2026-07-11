@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { facultyApi, ApiError } from "../api/client";
 import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
@@ -12,6 +13,7 @@ interface FacultyCardProps {
 
 export function FacultyCard({ faculty, onDeleted }: FacultyCardProps) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,13 +33,36 @@ export function FacultyCard({ faculty, onDeleted }: FacultyCardProps) {
     }
   }
 
+  function handleCardClick() {
+    // Don't navigate away while the delete confirmation is open.
+    if (showConfirm) return;
+    navigate(`/faculties/${faculty.id}`);
+  }
+
+  function handleCardKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleCardClick();
+    }
+  }
+
   return (
-    <article className="card faculty-card">
+    <article
+      className="card faculty-card"
+      onClick={handleCardClick}
+      onKeyDown={handleCardKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-label={`Open ${faculty.name}`}
+    >
       {canDelete && (
         <button
           className="faculty-delete-icon"
           aria-label={`Delete ${faculty.name}`}
-          onClick={() => setShowConfirm(true)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowConfirm(true);
+          }}
         >
           🗑
         </button>
@@ -57,7 +82,8 @@ export function FacultyCard({ faculty, onDeleted }: FacultyCardProps) {
 
       {showConfirm && (
         <ConfirmDeleteModal
-          facultyName={faculty.name}
+          itemName={faculty.name}
+          itemLabel="faculty"
           isDeleting={isDeleting}
           onConfirm={handleConfirmDelete}
           onCancel={() => setShowConfirm(false)}

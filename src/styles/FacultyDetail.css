@@ -1,0 +1,22 @@
+/* Small additions on top of Dashboard.css / ProfileCard.css for the
+   faculty detail page. No new colors — same tokens as the rest of the app. */
+
+.hero-back-link {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  padding: 0;
+  color: rgb(255 255 255 / 0.7);
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-bottom: 4px;
+}
+
+.hero-back-link:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.profile-column .profile-card {
+  margin-bottom: 24px;
+}

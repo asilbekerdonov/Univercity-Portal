@@ -3,6 +3,7 @@ import type {
   LoginSuccessResponse,
   LoginValidationErrorResponse,
   Faculty,
+  Student,
 } from "../types";
 
 // Base URL for the Yii2 backend. Adjust via Vite env var at build time.
@@ -88,9 +89,15 @@ export const authApi = {
     });
   },
 };
+
 export const facultyApi = {
   getAll(): Promise<Faculty[]> {
     return request<Faculty[]>("/v1/faculties", {
+      method: "GET",
+    });
+  },
+  getOne(id: number | string): Promise<Faculty> {
+    return request<Faculty>(`/v1/faculties/${id}`, {
       method: "GET",
     });
   },
@@ -102,6 +109,25 @@ export const facultyApi = {
   },
   delete(id: number): Promise<void> {
     return request<void>(`/v1/faculties/${id}`, {
+      method: "DELETE",
+    });
+  },
+  getStudents(facultyId: number | string): Promise<Student[]> {
+    return request<Student[]>(`/v1/faculties/${facultyId}/students`, {
+      method: "GET",
+    });
+  },
+  createStudent(
+    facultyId: number | string,
+    payload: { name: string; age: number; course: number }
+  ): Promise<Student> {
+    return request<Student>(`/v1/faculties/${facultyId}/students`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  },
+  deleteStudent(id: number): Promise<void> {
+    return request<void>(`/v1/students/${id}`, {
       method: "DELETE",
     });
   },
