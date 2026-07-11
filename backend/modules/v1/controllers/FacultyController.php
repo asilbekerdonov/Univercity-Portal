@@ -1,0 +1,90 @@
+<?php
+
+namespace backend\modules\v1\controllers;
+
+use common\models\Faculty;
+use common\models\User;
+use Yii;
+use yii\filters\auth\HttpBearerAuth;
+use yii\rest\ActiveController;
+use yii\web\ForbiddenHttpException;
+
+class FacultyController extends ActiveController
+{
+    public $modelClass = 'common\models\Faculty';
+
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => HttpBearerAuth::class,
+        ];
+        return $behaviors;
+    }
+
+    public function actions()
+    {
+        $actions = parent::actions();
+        // Используем свою логику для create/update/delete с проверкой роли
+        unset($actions['create'], $actions['update'], $actions['delete']);
+        return $actions;
+    }
+
+    protected function checkSuperAdmin(): void
+    {
+        $identity = Yii::$app->user->identity;
+        if (!$identity || $identity->role !== User::ROLE_SUPER_ADMIN) {
+            throw new ForbiddenHttpException('Только super_admin может изменять факультеты.');
+        }
+    }
+
+    public function actionCreate()
+    {
+        $this->checkSuperAdmin();
+
+        $model = new Faculty();
+        $model->load(Yii::$app->request->post(), '');
+
+        if ($model->save()) {
+            Yii::$app->response->statusCode = 201;
+            return $model;
+        }
+
+        Yii::$app->response->statusCode = 422;
+        return ['errors' => $model->errors];
+    }
+
+    public function actionUpdate($id)
+    {
+        $this->checkSuperAdmin();
+
+        $model = Faculty::findOne($id);
+        if (!$model) {
+            Yii::$app->response->statusCode = 404;
+            return ['message' => 'Факультет не найден.'];
+        }
+
+        $model->load(Yii::$app->request->getBodyParams(), '');
+
+        if ($model->save()) {
+            return $model;
+        }
+
+        Yii::$app->response->statusCode = 422;
+        return ['errors' => $model->errors];
+    }
+
+    public function actionDelete($id)
+    {
+        $this->checkSuperAdmin();
+
+        $model = Faculty::findOne($id);
+        if (!$model) {
+            Yii::$app->response->statusCode = 404;
+            return ['message' => 'Факультет не найден.'];
+        }
+
+        $model->delete();
+        Yii::$app->response->statusCode = 204;
+    }
+}
