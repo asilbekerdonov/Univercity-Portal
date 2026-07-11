@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m260711_072542_seed_faculties extends Migration
+class m260711_122511_seed_faculties extends Migration
 {
     public function safeUp()
     {
