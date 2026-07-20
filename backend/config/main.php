@@ -39,7 +39,17 @@ return [
                 
                 'DELETE v1/faculties/<id>' => 'v1/faculty/delete',
                 'DELETE v1/students/<id>' => 'v1/student/delete',
+
+                // Email Service integration
+                'GET v1/email/health' => 'v1/email/health',
+                'POST v1/email/send' => 'v1/email/send',
+                'GET v1/email/status/<id:\d+>' => 'v1/email/status',
             ],
+        ],
+        'emailClient' => [
+            'class' => 'common\components\email\EmailClient',
+            'baseUrl' => getenv('EMAIL_SERVICE_URL') ?: 'http://localhost:8081',
+            'timeout' => 5,
         ],
         'request' => [
             'csrfParam' => '_csrf-backend',
