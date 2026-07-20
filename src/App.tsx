@@ -1,19 +1,16 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import { AuthProvider, useAuth } from "./context/AuthContext";
+import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Login } from "./pages/Login";
 import { Dashboard } from "./pages/Dashboard";
 import { FacultyDetail } from "./pages/FacultyDetail";
-
-function RootRedirect() {
-  const { isAuthenticated } = useAuth();
-  return <Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />;
-}
+import Univercity from "./pages/Univercity";
 
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<RootRedirect />} />
+      <Route path="/" element={<Univercity />} />
+      <Route path="/uni" element={<Univercity />} />
       <Route path="/login" element={<Login />} />
       <Route
         path="/dashboard"
