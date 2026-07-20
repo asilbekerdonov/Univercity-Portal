@@ -103,4 +103,11 @@ class FacultyController extends ActiveController
             ->where(['faculty_id' => $faculty->id])
             ->all();
     }
+    protected function checkSuperAdmin(): void
+{
+    $identity = Yii::$app->user->identity;
+    if (!$identity || $identity->role !== User::ROLE_SUPER_ADMIN) {
+        throw new ForbiddenHttpException('Недостаточно прав. Требуется роль супер-администратора.');
+    }
+}
 }

@@ -27,7 +27,7 @@ use yii\base\Component;
 class EmailClient extends Component
 {
     /** @var string Базовый URL Email Service, например http://localhost:8081 */
-    public string $baseUrl = 'http://localhost:8081';
+    public string $baseUrl = 'http://localhost:8080';
 
     /** @var int Таймаут на весь запрос (сек.) */
     public int $timeout = 5;
