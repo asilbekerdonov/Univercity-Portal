@@ -14,7 +14,7 @@ class m260711_194642_create_students_table extends Migration
             'faculty_id' => $this->integer()->notNull(),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
-        ], 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
+        ]);
 
         $this->createIndex('idx-students-faculty_id', '{{%students}}', 'faculty_id');
 

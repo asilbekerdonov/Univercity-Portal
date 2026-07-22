@@ -24,7 +24,7 @@ class m260707_163458_create_users_table extends Migration
             'created_by' => $this->integer(),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
-        ], 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
+        ]);
 
         $this->addForeignKey(
             'fk-users-created_by',

@@ -1,10 +1,11 @@
 services:
+  # ---------- Фронтенд (React/Vite) ----------
   frontend:
     image: node:22-alpine
     working_dir: /app/js
     command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 3000"
-    ports:
-      - "3100:3000"
+    # ports:  # ← ЗАКОММЕНТИРОВАНО - доступ только через Nginx
+    #   - "3100:3000"
     volumes:
       - ../js:/app/js
     environment:
@@ -15,13 +16,14 @@ services:
     networks:
       - app-network
 
+  # ---------- Бэкенд (Yii2) ----------
   backend:
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: docker/backend/Dockerfile  # ← обновленный путь
     container_name: yii2_backend
-    ports:
-      - "21080:80"
+    # ports:  # ← ЗАКОММЕНТИРОВАНО - доступ только через Nginx
+    #   - "21080:80"
     depends_on:
       postgres:
         condition: service_healthy
@@ -36,6 +38,7 @@ services:
     networks:
       - app-network
 
+  # ---------- PostgreSQL (основной) ----------
   postgres:
     image: postgres:16-alpine
     container_name: yii2_postgres
@@ -54,6 +57,7 @@ services:
     networks:
       - app-network
 
+  # ---------- PostgreSQL (Email Service) ----------
   email_postgres:
     image: postgres:16-alpine
     container_name: yii2_email_postgres
@@ -73,11 +77,12 @@ services:
     networks:
       - app-network
 
+  # ---------- Email Service App ----------
   email-app:
     image: email-app:latest
     container_name: yii2_email_app
-    ports:
-      - "8081:8080"
+    # ports:  # ← ЗАКОММЕНТИРОВАНО - доступ только через Nginx
+    #   - "8081:8080"
     environment:
       SERVER_PORT: 8080
       DB_HOST: email_postgres
@@ -104,6 +109,7 @@ services:
     networks:
       - app-network
 
+  # ---------- RabbitMQ ----------
   yii2_rabbitmq:
     image: rabbitmq:3.13-management
     container_name: yii2_rabbitmq
@@ -120,6 +126,7 @@ services:
     networks:
       - app-network
 
+  # ---------- Redis ----------
   yii2_redis:
     image: redis:7-alpine
     container_name: yii2_redis
@@ -132,6 +139,7 @@ services:
     networks:
       - app-network
 
+  # ---------- Email Worker ----------
   email_worker:
     image: email-worker:latest
     container_name: yii2_email_worker
@@ -158,6 +166,27 @@ services:
     command: ["/app/worker"]
     networks:
       - app-network
+
+  # ---------- ✅ Nginx Reverse Proxy ----------
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile  # ← новый путь
+    container_name: yii2_nginx
+    ports:
+      - "80:80"      # HTTP
+      - "443:443"    # HTTPS (если будете использовать)
+    depends_on:
+      - frontend
+      - backend
+      - email-app
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro  # монтируем конфиг
+      - ./logs/nginx:/var/log/nginx  # для логов (опционально)
+      - ./certs:/etc/nginx/certs:ro  # для SSL (опционально)
+    networks:
+      - app-network
+    restart: unless-stopped
 
 networks:
   app-network:

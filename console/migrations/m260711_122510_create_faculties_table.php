@@ -15,7 +15,7 @@ class m260711_122510_create_faculties_table extends Migration
             'is_active' => $this->boolean()->notNull()->defaultValue(true),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
-        ], 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
+        ]);
 
         $this->createIndex('idx-faculties-sort_order', '{{%faculties}}', 'sort_order');
     }
