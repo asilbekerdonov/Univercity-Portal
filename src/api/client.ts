@@ -7,7 +7,9 @@ Student,
 } from "../types";
 
 // Base URL for the Yii2 backend. Adjust via Vite env var at build time.
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "/api";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 
+  (window.location.hostname === 'localhost' ? '/api' : 'http://backend:80/api');
 
 /**
  * The access token is intentionally kept only in memory (module-level
@@ -180,6 +182,7 @@ getStatus(id: number): Promise<EmailStatusResponse> {
   });
 },
 
+
 /**
  * Health check email сервиса
  */
@@ -189,4 +192,5 @@ health(): Promise<{ status: string; service: string; timestamp: string }> {
     auth: false,
   });
 },
+
 };
