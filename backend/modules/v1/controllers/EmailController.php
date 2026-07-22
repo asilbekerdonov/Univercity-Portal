@@ -7,26 +7,48 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\web\BadRequestHttpException;
 use yii\web\ServerErrorHttpException;
+use yii\filters\Cors;
 use common\components\email\EmailServiceException;
 
-/**
- * /v1/email/* — тонкий прокси-слой над Email Service (Go).
- * Не содержит бизнес-логики отправки — только валидацию входных данных
- * и делегирование в common\components\email\EmailClient.
- */
 class EmailController extends Controller
 {
     public $enableCsrfValidation = false;
 
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+
+        $behaviors['corsFilter'] = [
+            'class' => Cors::class,
+            'cors' => [
+                'Origin' => ['*'],
+                'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+                'Access-Control-Request-Headers' => ['*'],
+                'Access-Control-Allow-Credentials' => false,
+                'Access-Control-Max-Age' => 86400,
+            ],
+        ];
+
+        return $behaviors;
+    }
+
     public function beforeAction($action)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
+        Yii::$app->response->headers->set('Access-Control-Allow-Origin', '*');
+        Yii::$app->response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        Yii::$app->response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
+        Yii::$app->response->headers->set('Access-Control-Max-Age', '86400');
         return parent::beforeAction($action);
     }
 
-    /**
-     * GET /v1/email/health
-     */
+    public function actionOptions()
+    {
+        Yii::$app->response->statusCode = 200;
+        Yii::$app->response->headers->set('Allow', 'GET, POST, PUT, DELETE, OPTIONS');
+        return [];
+    }
+
     public function actionHealth()
     {
         try {
@@ -37,10 +59,6 @@ class EmailController extends Controller
         }
     }
 
-    /**
-     * POST /v1/email/send
-     * Body: { "to": "...", "subject": "...", "body": "...", "is_html": false }
-     */
     public function actionSend()
     {
         $request = Yii::$app->request;
@@ -70,9 +88,6 @@ class EmailController extends Controller
         return $result;
     }
 
-    /**
-     * GET /v1/email/status/<id>
-     */
     public function actionStatus($id)
     {
         try {

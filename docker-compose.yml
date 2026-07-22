@@ -1,36 +1,168 @@
 services:
-
   frontend:
-    build: frontend
+    image: node:22-alpine
+    working_dir: /app/js
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 3000"
     ports:
-      - 20080:80
+      - "3100:3000"
     volumes:
-      # Re-use local composer cache via host-volume
-      - ~/.composer-docker/cache:/root/.composer/cache:delegated
-      # Mount source-code for development
-      - ./:/app
+      - ../js:/app/js
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - VITE_API_BASE_URL=/api
+    depends_on:
+      - backend
+    networks:
+      - app-network
 
   backend:
-    build: backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: yii2_backend
     ports:
-      - 21080:80
-    volumes:
-      # Re-use local composer cache via host-volume
-      - ~/.composer-docker/cache:/root/.composer/cache:delegated
-      # Mount source-code for development
-      - ./:/app
-
-  mysql:
-    image: mysql:8.0
+      - "21080:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
     environment:
-      - MYSQL_ROOT_PASSWORD=verysecret
-      - MYSQL_DATABASE=yii2advanced
-      - MYSQL_USER=yii2advanced
-      - MYSQL_PASSWORD=secret
+      - DB_DSN=pgsql:host=postgres;port=5432;dbname=yii2advanced
+      - DB_USERNAME=yii2advanced
+      - DB_PASSWORD=secret
+      - EMAIL_SERVICE_URL=http://email-app:8080
+    volumes:
+      - ./:/app
+      - ./backend/web/assets:/app/backend/web/assets
+    networks:
+      - app-network
 
-  #pgsql:
-  #  image: postgres:16
-  #  environment:
-  #    - POSTGRES_DB=yii2advanced
-  #    - POSTGRES_USER=yii2advanced
-  #    - POSTGRES_PASSWORD=secret
+  postgres:
+    image: postgres:16-alpine
+    container_name: yii2_postgres
+    environment:
+      POSTGRES_DB: yii2advanced
+      POSTGRES_USER: yii2advanced
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U yii2advanced"]
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-network
+
+  email_postgres:
+    image: postgres:16-alpine
+    container_name: yii2_email_postgres
+    environment:
+      POSTGRES_DB: email_service
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app123
+    ports:
+      - "5433:5432"
+    volumes:
+      - email_postgres_data:/var/lib/postgresql/data
+      - ../../email/migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app"]
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-network
+
+  email-app:
+    image: email-app:latest
+    container_name: yii2_email_app
+    ports:
+      - "8081:8080"
+    environment:
+      SERVER_PORT: 8080
+      DB_HOST: email_postgres
+      DB_PORT: 5432
+      DB_USER: app
+      DB_PASSWORD: app123
+      DB_NAME: email_service
+      DB_DRIVER: postgres
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 587
+      SMTP_USER: asilbekerdonov4@gmail.com
+      SMTP_PASS: dhkhpygevzgjknly
+      RABBITMQ_HOST: yii2_rabbitmq
+      RABBITMQ_PORT: 5672
+      REDIS_HOST: yii2_redis
+      REDIS_PORT: 6379
+    depends_on:
+      email_postgres:
+        condition: service_healthy
+      yii2_rabbitmq:
+        condition: service_healthy
+      yii2_redis:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  yii2_rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: yii2_rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-network
+
+  yii2_redis:
+    image: redis:7-alpine
+    container_name: yii2_redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-network
+
+  email_worker:
+    image: email-worker:latest
+    container_name: yii2_email_worker
+    depends_on:
+      email_postgres:
+        condition: service_healthy
+      yii2_rabbitmq:
+        condition: service_healthy
+    environment:
+      DB_HOST: email_postgres
+      DB_PORT: 5432
+      DB_USER: app
+      DB_PASSWORD: app123
+      DB_NAME: email_service
+      DB_DRIVER: postgres
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 587
+      SMTP_USER: asilbekerdonov4@gmail.com
+      SMTP_PASS: dhkhpygevzgjknly
+      RABBITMQ_HOST: yii2_rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+    command: ["/app/worker"]
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  email_postgres_data:

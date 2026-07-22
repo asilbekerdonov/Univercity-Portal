@@ -7,6 +7,7 @@ use common\models\Student;
 use common\models\User;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
+use yii\filters\Cors; // ✅ Добавить импорт
 use yii\rest\ActiveController;
 use yii\web\ForbiddenHttpException;
 
@@ -14,14 +15,33 @@ class FacultyController extends ActiveController
 {
     public $modelClass = 'common\models\Faculty';
 
+    // ✅ ДОБАВИТЬ BEHAVIORS
     public function behaviors()
     {
         $behaviors = parent::behaviors();
+        
+        // CORS должен быть ПЕРЕД аутентификацией
+        $behaviors['corsFilter'] = [
+            'class' => Cors::class,
+            'cors' => [
+                'Origin' => [
+                    'http://localhost:3100',
+                    'http://localhost:5173',
+                    'http://frontend:3000',
+                ],
+                'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+                'Access-Control-Request-Headers' => ['*'],
+                'Access-Control-Allow-Credentials' => true,
+            ],
+        ];
+        
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::class,
         ];
+        
         return $behaviors;
     }
+  
 
     public function actions()
     {

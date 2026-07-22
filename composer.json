@@ -22,7 +22,8 @@
         "zircote/swagger-php": "^6.3",
         "doctrine/annotations": "^2.0",
         "grpc/grpc": "^1.82",
-        "yiisoft/yii2-httpclient": "^2.0"
+        "yiisoft/yii2-httpclient": "^2.0",
+        "yiisoft/yii2-queue": "^2.3"
     },
     "require-dev": {
         "codeception/c3": "^2.8",

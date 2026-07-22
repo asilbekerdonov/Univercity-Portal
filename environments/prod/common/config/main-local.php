@@ -12,9 +12,9 @@ return [
     'components' => [
         'db' => [
             'class' => \yii\db\Connection::class,
-            'dsn' => 'mysql:host=localhost;dbname=yii2advanced',
-            'username' => 'root',
-            'password' => '',
+            'dsn' => getenv('DB_DSN') ?: 'pgsql:host=postgres;port=5432;dbname=yii2advanced',
+            'username' => getenv('DB_USERNAME') ?: 'yii2advanced',
+            'password' => getenv('DB_PASSWORD') ?: 'secret',
             'charset' => 'utf8',
         ],
         'mailer' => \yii\mail\MailerInterface::class,
